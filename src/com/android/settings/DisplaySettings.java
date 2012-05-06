@@ -28,6 +28,10 @@ import android.database.ContentObserver;
 import android.os.Bundle;
 import android.os.RemoteException;
 import android.os.Handler;
+import android.os.IBinder;
+import android.os.Parcel;
+import android.os.RemoteException;
+import android.os.ServiceManager;
 import android.preference.CheckBoxPreference;
 import android.preference.ListPreference;
 import android.preference.Preference;
@@ -68,6 +72,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String ON_SCREEN_BUTTONS_HEIGHT = "on_screen_buttons_height";
     //private static final String ON_SCREEN_BUTTONS_WIDTH = "on_screen_buttons_width";
     private static final String IS_INACCURATE_PROXIMITY = "is_inaccurate_proximity";
+    private static final String KEY_RENDER_EFFECT = "pref_render_effect";
 
     private static final String ROTATION_ANGLE_0 = "0";
     private static final String ROTATION_ANGLE_90 = "90";
@@ -90,6 +95,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private ListPreference mFontSizePref;
 
     private ListPreference mOnScreenButtonsHeight;
+    private ListPreference mRenderEffect;
 
     private final Configuration mCurConfig = new Configuration();
 
@@ -226,6 +232,10 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             mInaccurateProximityPref.setChecked(Settings.System.getInt(getContentResolver(),
                     Settings.System.INACCURATE_PROXIMITY_WORKAROUND, 0) == 1);
         }
+
+        mRenderEffect = (ListPreference) findPreference(KEY_RENDER_EFFECT);
+        mRenderEffect.setOnPreferenceChangeListener(this);
+        updateFlingerOptions();
 
     }
 
@@ -458,6 +468,9 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             } catch (NumberFormatException e) {
                 Log.e(TAG, "could not persist screen timeout setting", e);
             }
+        } else if (KEY_RENDER_EFFECT.equals(key)) {
+            writeRenderEffect(Integer.valueOf((String) objValue));
+            return true;
         }
 
         if (ON_SCREEN_BUTTONS_HEIGHT.equals(key)) {
@@ -475,4 +488,49 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
 
         return true;
     }
+
+    private void updateFlingerOptions() {
+        // magic communication with surface flinger.
+        try {
+            IBinder flinger = ServiceManager.getService("SurfaceFlinger");
+            if (flinger != null) {
+                Parcel data = Parcel.obtain();
+                Parcel reply = Parcel.obtain();
+                data.writeInterfaceToken("android.ui.ISurfaceComposer");
+                flinger.transact(1010, data, reply, 0);
+                int v;
+                v = reply.readInt();
+                // mShowCpuCB.setChecked(v != 0);
+                v = reply.readInt();
+                // mEnableGLCB.setChecked(v != 0);
+                v = reply.readInt();
+                // mShowUpdatesCB.setChecked(v != 0);
+                v = reply.readInt();
+                // mShowBackgroundCB.setChecked(v != 0);
+
+                v = reply.readInt();
+                mRenderEffect.setValue(String.valueOf(v));
+
+                reply.recycle();
+                data.recycle();
+            }
+        } catch (RemoteException ex) {
+        }
+
+    }
+
+    private void writeRenderEffect(int id) {
+        try {
+            IBinder flinger = ServiceManager.getService("SurfaceFlinger");
+            if (flinger != null) {
+                Parcel data = Parcel.obtain();
+                data.writeInterfaceToken("android.ui.ISurfaceComposer");
+                data.writeInt(id);
+                flinger.transact(1014, data, null, 0);
+                data.recycle();
+            }
+        } catch (RemoteException ex) {
+        }
+    }
+
 }
