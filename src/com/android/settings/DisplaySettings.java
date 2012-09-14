@@ -66,6 +66,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
 
     private static final String KEY_HDMI_RESOLUTION = "hdmi_resolution";
     private static final String KEY_ACCELEROMETER_COORDINATE = "accelerometer_coordinate";
+	private static final String KEY_TABLET_UI = "tablet_ui";
 
     private static final String ROTATION_ANGLE_0 = "0";
     private static final String ROTATION_ANGLE_90 = "90";
@@ -78,6 +79,9 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private CheckBoxPreference mVolumeWake;
     private CheckBoxPreference mElectronBeamAnimationOn;
     private CheckBoxPreference mElectronBeamAnimationOff;
+
+    private CheckBoxPreference mTabletUi;
+
     private PreferenceScreen mNotificationPulse;
     private PreferenceScreen mBatteryPulse;
 
@@ -225,6 +229,12 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                         Settings.System.VOLUME_WAKE_SCREEN, 0) == 1);
             }
         }
+
+		mTabletUi = (CheckBoxPreference) findPreference(KEY_TABLET_UI);
+		if (mTabletUi != null) {
+			mTabletUi.setChecked(Settings.System.getInt(getContentResolver(),
+			Settings.System.TABLET_UI, 1) != 0);
+		}
 
     }
 
@@ -459,7 +469,10 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                     mLockScreenRotation.isChecked() ? 1 : 0);
             updateDisplayRotationPreferenceDescription();
             return true;
-        }
+        } else  if (preference == mTabletUi) {
+            Settings.System.putInt(getContentResolver(), Settings.System.TABLET_UI,
+                    mTabletUi.isChecked() ? 1 : 0);
+		}
 
         return super.onPreferenceTreeClick(preferenceScreen, preference);
     }

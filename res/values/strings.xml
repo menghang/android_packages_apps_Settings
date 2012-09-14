@@ -4839,6 +4839,8 @@
     <string name="hdmi_resolution_title">HDMI resolution</string>
 
     <string name="accelerometer_coordinate_title">Accelerometer coordinate system</string>
+	
+    <string name="tablet_ui_title">Enable Tablet UI</string>
 
     <!-- Electron Beam -->
     <string name="display_category_animation_options_title">Animation</string>
@@ -4934,4 +4936,5 @@
     <string name="sms_security_check_limit_default">30 (Default)</string>
 
     <!-- **** CYANOGENMOD ADDITIONS END **** -->
+
 </resources>

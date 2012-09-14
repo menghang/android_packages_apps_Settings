@@ -75,6 +75,9 @@
             android:entries="@array/accelerometer_entries"
             android:entryValues="@array/accelerometer_values" />
 
+		<CheckBoxPreference
+			android:key="tablet_ui"
+			android:title="@string/tablet_ui_title"/>
 
 <!-- Remove until merged from CM9
         <PreferenceCategory
