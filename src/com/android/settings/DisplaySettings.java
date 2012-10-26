@@ -52,6 +52,8 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_NOTIFICATION_PULSE = "notification_pulse";
     private static final String KEY_SCREEN_SAVER = "screensaver";
 
+    private static final String KEY_HDMI_RESOLUTION = "hdmi_resolution";
+
     private CheckBoxPreference mAccelerometer;
     private ListPreference mFontSizePref;
     private CheckBoxPreference mNotificationPulse;
@@ -61,6 +63,8 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private ListPreference mScreenTimeoutPreference;
     private Preference mScreenSaverPreference;
 
+    private ListPreference mHdmiResolution;
+    
     private final RotationPolicy.RotationPolicyListener mRotationPolicyListener =
             new RotationPolicy.RotationPolicyListener() {
         @Override
@@ -114,6 +118,15 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             } catch (SettingNotFoundException snfe) {
                 Log.e(TAG, Settings.System.NOTIFICATION_LIGHT_PULSE + " not found");
             }
+        }
+
+		mHdmiResolution = (ListPreference) findPreference(KEY_HDMI_RESOLUTION);
+        if(mHdmiResolution != null){
+            mHdmiResolution.setOnPreferenceChangeListener(this);
+            String value = Settings.System.getString(getContentResolver(),
+                    Settings.System.HDMI_RESOLUTION);
+            mHdmiResolution.setValue(value);
+            updateHdmiResolutionSummary(value);
         }
 
     }
@@ -225,6 +238,19 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                 mRotationPolicyListener);
     }
 
+
+    private void updateHdmiResolutionSummary(Object value){
+        CharSequence[] summaries = getResources().getTextArray(R.array.hdmi_resolution_summaries);
+        CharSequence[] values = mHdmiResolution.getEntryValues();
+        for (int i=0; i<values.length; i++) {
+            if (values[i].equals(value)) {
+                mHdmiResolution.setSummary(summaries[i]);
+                break;
+            }
+        }
+    }
+
+
     private void updateState() {
         updateAccelerometerRotationCheckbox();
         readFontSizePreference(mFontSizePref);
@@ -280,6 +306,18 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         }
         if (KEY_FONT_SIZE.equals(key)) {
             writeFontSizePreference(objValue);
+        }
+
+        if (KEY_HDMI_RESOLUTION.equals(key))
+        {
+            String value = String.valueOf(objValue);
+            try {
+                Settings.System.putString(getContentResolver(),
+                        Settings.System.HDMI_RESOLUTION, value);
+                updateHdmiResolutionSummary(objValue);
+            }catch (NumberFormatException e) {
+                Log.e(TAG, "could not persist key hdmi resolution setting", e);
+            }
         }
 
         return true;

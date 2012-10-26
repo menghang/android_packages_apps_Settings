@@ -4277,4 +4277,6 @@
     <string name="usb_mass_storage_title">Mass storage</string>
     <string name="usb_mass_storage_summary">Enable USB mass storage</string>
 
+	<string name="hdmi_resolution_title">HDMI resolution</string>
+
 </resources>

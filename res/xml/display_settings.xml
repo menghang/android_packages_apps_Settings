@@ -64,4 +64,11 @@
             android:title="@string/notification_pulse_title"
             android:persistent="false" />
 
+		<ListPreference
+            android:key="hdmi_resolution"
+            android:title="@string/hdmi_resolution_title"
+            android:persistent="false"
+            android:entries="@array/hdmi_resolution_entries"
+            android:entryValues="@array/hdmi_resolution_values" />
+
 </PreferenceScreen>
