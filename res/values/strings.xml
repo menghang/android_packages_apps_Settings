@@ -4278,5 +4278,6 @@
     <string name="usb_mass_storage_summary">Enable USB mass storage</string>
 
 	<string name="hdmi_resolution_title">HDMI resolution</string>
+	<string name="accelerometer_coordinate_title">Accelerometer coordinate system</string>
 
 </resources>

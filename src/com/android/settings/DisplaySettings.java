@@ -53,6 +53,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_SCREEN_SAVER = "screensaver";
 
     private static final String KEY_HDMI_RESOLUTION = "hdmi_resolution";
+	private static final String KEY_ACCELEROMETER_COORDINATE = "accelerometer_coordinate";
 
     private CheckBoxPreference mAccelerometer;
     private ListPreference mFontSizePref;
@@ -64,7 +65,8 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private Preference mScreenSaverPreference;
 
     private ListPreference mHdmiResolution;
-    
+	private ListPreference mAccelerometerCoordinate;
+
     private final RotationPolicy.RotationPolicyListener mRotationPolicyListener =
             new RotationPolicy.RotationPolicyListener() {
         @Override
@@ -127,6 +129,15 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                     Settings.System.HDMI_RESOLUTION);
             mHdmiResolution.setValue(value);
             updateHdmiResolutionSummary(value);
+        }
+
+        mAccelerometerCoordinate = (ListPreference) findPreference(KEY_ACCELEROMETER_COORDINATE);
+        if(mAccelerometerCoordinate != null){
+         mAccelerometerCoordinate.setOnPreferenceChangeListener(this);
+         String value = Settings.System.getString(getContentResolver(),
+         Settings.System.ACCELEROMETER_COORDINATE);
+         mAccelerometerCoordinate.setValue(value);
+         updateAccelerometerCoordinateSummary(value);
         }
 
     }
@@ -251,6 +262,18 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     }
 
 
+    private void updateAccelerometerCoordinateSummary(Object value){
+        CharSequence[] summaries = getResources().getTextArray(R.array.accelerometer_summaries);
+        CharSequence[] values = mAccelerometerCoordinate.getEntryValues();
+        for (int i=0; i<values.length; i++) {
+            if (values[i].equals(value)) {
+                mAccelerometerCoordinate.setSummary(summaries[i]);
+                break;
+            }
+        }
+    }
+
+
     private void updateState() {
         updateAccelerometerRotationCheckbox();
         readFontSizePreference(mFontSizePref);
@@ -317,6 +340,17 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
                 updateHdmiResolutionSummary(objValue);
             }catch (NumberFormatException e) {
                 Log.e(TAG, "could not persist key hdmi resolution setting", e);
+            }
+        }
+        
+        if (KEY_ACCELEROMETER_COORDINATE.equals(key)) {
+            String value = String.valueOf(objValue);
+            try {
+                Settings.System.putString(getContentResolver(),
+                        Settings.System.ACCELEROMETER_COORDINATE, value);
+                updateAccelerometerCoordinateSummary(objValue);
+            }catch (NumberFormatException e) {
+                Log.e(TAG, "could not persist key accelerometer coordinate setting", e);
             }
         }
 
