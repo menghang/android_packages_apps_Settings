@@ -63,6 +63,7 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private static final String KEY_ELECTRON_BEAM_CATEGORY_ANIMATION = "category_animation_options";
     private static final String KEY_WAKEUP_CATEGORY = "category_wakeup_options";
     private static final String KEY_VOLUME_WAKE = "pref_volume_wake";
+    private static final String KEY_HDMI_RESOLUTION = "hdmi_resolution";
 
     private static final String ROTATION_ANGLE_0 = "0";
     private static final String ROTATION_ANGLE_90 = "90";
@@ -87,6 +88,8 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
     private Preference mScreenSaverPreference;
     private PreferenceScreen mDisplayRotationPreference;
     private PreferenceScreen mAutomaticBacklightPreference;
+
+    private ListPreference mHdmiResolution;
 
     private ContentObserver mAccelerometerRotationObserver = 
             new ContentObserver(new Handler()) {
@@ -190,6 +193,16 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
             getPreferenceScreen().removePreference((PreferenceCategory) findPreference(KEY_ELECTRON_BEAM_CATEGORY_ANIMATION));
         }
 */
+
+        mHdmiResolution = (ListPreference) findPreference(KEY_HDMI_RESOLUTION);
+        if(mHdmiResolution != null){
+            mHdmiResolution.setOnPreferenceChangeListener(this);
+            String value = Settings.System.getString(getContentResolver(),
+                    Settings.System.HDMI_RESOLUTION);
+            mHdmiResolution.setValue(value);
+            updateHdmiResolutionSummary(value);
+        }
+
         mVolumeWake = (CheckBoxPreference) findPreference(KEY_VOLUME_WAKE);
         if (mVolumeWake != null) {
             if (!getResources().getBoolean(R.bool.config_show_volumeRockerWake)) {
@@ -360,6 +373,19 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         getContentResolver().unregisterContentObserver(mAccelerometerRotationObserver);
     }
 
+
+    private void updateHdmiResolutionSummary(Object value){
+        CharSequence[] summaries = getResources().getTextArray(R.array.hdmi_resolution_summaries);
+        CharSequence[] values = mHdmiResolution.getEntryValues();
+        for (int i=0; i<values.length; i++) {
+            if (values[i].equals(value)) {
+                mHdmiResolution.setSummary(summaries[i]);
+                break;
+            }
+        }
+    }
+
+
     private void updateState() {
         updateAccelerometerRotationCheckbox();
         updateScreenSaverSummary();
@@ -427,6 +453,18 @@ public class DisplaySettings extends SettingsPreferenceFragment implements
         }
         if (KEY_FONT_SIZE.equals(key)) {
             writeFontSizePreference(objValue);
+        }
+
+        if (KEY_HDMI_RESOLUTION.equals(key))
+        {
+            String value = String.valueOf(objValue);
+            try {
+                Settings.System.putString(getContentResolver(),
+                        Settings.System.HDMI_RESOLUTION, value);
+                updateHdmiResolutionSummary(objValue);
+            }catch (NumberFormatException e) {
+                Log.e(TAG, "could not persist key hdmi resolution setting", e);
+            }
         }
 
         return true;
