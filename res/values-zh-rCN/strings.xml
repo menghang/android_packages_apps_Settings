@@ -1844,4 +1844,7 @@
     <!-- USB Mass Storage -->
     <string name="usb_mass_storage_title">大容量存储</string>
     <string name="usb_mass_storage_summary">启用 USB 大容量存储</string>
+
+	<string name="hdmi_resolution_title">HDMI输出分辨率</string>
+    <string name="accelerometer_coordinate_title">更改重力坐标系</string>
 </resources>

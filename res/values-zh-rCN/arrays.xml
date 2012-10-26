@@ -289,6 +289,33 @@
     <item msgid="4042143101664725090">"超时"</item>
     <item msgid="7664124146786465092">"失败"</item>
   </string-array>
+
+	<string-array name="hdmi_resolution_entries">
+        <item >自动</item>
+        <item >1080p 60hz</item>
+        <item >1080p 50hz</item>
+        <item >720p 60hz</item>
+        <item >720p 50hz</item>
+    </string-array>
+
+    <string-array name="hdmi_resolution_summaries">
+        <item >自动选择</item>
+        <item >NTSC制式使用的Full HD分辨率</item>
+        <item >PAL制式使用的Full HD分辨率</item>
+        <item >NTSC制式使用的HD-Ready分辨率</item>
+        <item >PAL制式使用的HD-Ready分辨率</item>
+    </string-array>
+
+    <string-array name="accelerometer_entries">
+        <item>默认重力坐标系统</item>
+        <item>特殊重力坐标系统，以支持某些游戏</item>
+    </string-array>
+    
+    <string-array name="accelerometer_summaries">
+        <item>重力传感器使用默认的坐标系.</item>
+        <item>重力传感器使用特殊的坐标系, 以支持某些游戏.</item>
+    </string-array>
+
     <!-- Arrays required by Automatic Backlight. -->
     <string-array name="entries_light_filter_window">
         <item>2 秒</item>
