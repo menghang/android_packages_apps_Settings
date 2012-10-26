@@ -4838,6 +4838,8 @@
 
     <string name="hdmi_resolution_title">HDMI resolution</string>
 
+    <string name="accelerometer_coordinate_title">Accelerometer coordinate system</string>
+
     <!-- Electron Beam -->
     <string name="display_category_animation_options_title">Animation</string>
     <string name="display_electron_beam_animation_on_title">Screen-on animation</string>
