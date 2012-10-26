@@ -2399,6 +2399,10 @@
     <!-- Security & location settings screen, setting check box title. This controls whether the device shows the slider widgets before the unlock option [CHAR LIMIT=28]-->
     <string name="lockpattern_settings_enable_lock_before_unlock">解锁前显示小部件</string>
 
+    <string name="hdmi_resolution_title">HDMI输出分辨率</string>
+
+    <string name="accelerometer_coordinate_title">更改重力坐标系</string>
+
     <!-- Electron Beam -->
     <string name="display_category_animation_options_title">动画</string>
     <string name="display_electron_beam_animation_on_title">开屏动画</string>
