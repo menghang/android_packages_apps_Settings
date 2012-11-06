@@ -2441,6 +2441,8 @@
 
     <string name="accelerometer_coordinate_title">更改重力坐标系</string>
 
+	<string name="tablet_ui_title">强制启用平板界面</string>
+
     <!-- Electron Beam -->
     <string name="display_category_animation_options_title">动画</string>
     <string name="display_electron_beam_animation_on_title">开屏动画</string>
